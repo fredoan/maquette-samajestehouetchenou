@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sa Majesté Houétchénou | Trône, Divinités & Patrimoine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --royal-purple: #1A0F14;
+            --royal-deep: #0D060A;
+            --gold: #C9A44B;
+            --gold-bright: #E0BF6E;
+            --gold-pale: #F3E5C9;
+            --ivory: #FCFAF5;
+            --bronze: #8B5A2B;
+            --text-light: #EDE8DF;
+            --text-muted: #A89B8C;
+            --shadow-royal: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(201,164,75,0.2);
+            --transition-regal: cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Lora', 'Inter', serif;
+            background-color: var(--royal-deep);
+            color: var(--text-light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ========== LOADER ========== */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #0A0408;
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+            pointer-events: all;
+        }
+        #loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .loader-emblem {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(201,164,75,0.2);
+            animation: spinReverse 8s linear infinite;
+        }
+        .loader-ring-inner {
+            position: absolute;
+            width: 90%;
+            height: 90%;
+            border-radius: 50%;
+            border: 2px dashed var(--gold);
+            animation: spin 12s linear infinite;
+            opacity: 0.6;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spinReverse { 100% { transform: rotate(-360deg); } }
+
+        .loader-crown {
+            font-size: 4.2rem;
+            filter: drop-shadow(0 0 15px rgba(201,164,75,0.6));
+            z-index: 2;
+            animation: pulseCrown 2s ease-in-out infinite;
+            color: var(--gold-bright);
+        }
+        @keyframes pulseCrown {
+            0%,100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+
+        .loader-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.5s ease forwards;
+        }
+        .loader-sub {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.35em;
+            color: rgba(201,164,75,0.6);
+            margin-top: 8px;
+            opacity: 0;
+            animation: fadeUp 0.8s 0.8s ease forwards;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .loader-dots {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+            opacity: 0;
+            animation: fadeUp 0.8s 1.1s ease forwards;
+        }
+        .loader-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: dotPulse 1.5s infinite ease-in-out;
+        }
+        .loader-dots span:nth-child(2) { animation-delay: 0.25s; }
+        .loader-dots span:nth-child(3) { animation-delay: 0.5s; }
+        @keyframes dotPulse {
+            0%,80%,100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1.4); opacity: 1; }
+        }
+
+        /* ========== NAVIGATION ========== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 18px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            transition: all 0.4s var(--transition-regal);
+        }
+        nav.scrolled {
+            background: rgba(10, 4, 8, 0.92);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 12px 50px;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+            border-bottom: 1px solid rgba(201,164,75,0.25);
+        }
+        .nav-logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 0.08em;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .nav-logo:hover { color: var(--gold-bright); }
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(237, 232, 223, 0.85);
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: var(--gold);
+            transition: width 0.35s var(--transition-regal);
+        }
+        .nav-links a:hover { color: var(--white); }
+        .nav-links a:hover::after { width: 100%; }
+        .nav-cta {
+            background: var(--gold);
+            color: #0D060A !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 700 !important;
+            font-size: 0.75rem !important;
+            transition: all 0.35s !important;
+            text-decoration: none;
+            border: none;
+        }
+        .nav-cta:hover {
+            background: var(--gold-bright);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(201,164,75,0.4);
+        }
+        .nav-cta::after { display: none !important; }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            z-index: 1100;
+            background: none;
+            border: none;
+        }
+        .hamburger span {
+            width: 28px;
+            height: 2px;
+            background: var(--gold);
+            display: block;
+            transition: all 0.35s;
+            border-radius: 2px;
+        }
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px,6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px,-6px); }
+
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1040;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.4s;
+        }
+        .menu-overlay.active { opacity: 1; visibility: visible; }
+
+        /* ========== HERO ========== */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, #1A0F14 0%, #0D060A 80%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .hero-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" opacity="0.05"><path d="M20 20 L80 20 L80 80 L20 80 Z" stroke="%23C9A44B" stroke-width="1.5"/><circle cx="50" cy="50" r="8" stroke="%23C9A44B" stroke-width="1.2"/></svg>');
+            background-size: 140px 140px;
+            pointer-events: none;
+        }
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,164,75,0.12) 0%, transparent 70%);
+            top: -200px;
+            right: -100px;
+            animation: floatGlow 10s infinite alternate;
+            pointer-events: none;
+        }
+        .hero-glow.bottom {
+            top: auto;
+            bottom: -250px;
+            left: -150px;
+            animation-delay: -5s;
+        }
+        @keyframes floatGlow {
+            0% { transform: translate(0,0) scale(1); }
+            50% { transform: translate(40px,-40px) scale(1.1); }
+            100% { transform: translate(-20px,20px) scale(0.95); }
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 70px;
+            max-width: 1250px;
+            width: 90%;
+            padding: 130px 20px 80px;
+        }
+        .hero-portrait-frame {
+            flex-shrink: 0;
+            width: 360px;
+            height: 460px;
+            position: relative;
+            border: 6px solid var(--gold);
+            border-radius: 50% 20% 50% 20% / 25% 50% 25% 50%;
+            overflow: hidden;
+            box-shadow: var(--shadow-royal);
+            transition: transform 0.5s var(--transition-regal);
+        }
+        .hero-portrait-frame:hover {
+            transform: scale(1.02) translateY(-8px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 0 12px rgba(201,164,75,0.2);
+        }
+        .hero-portrait-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: sepia(0.1) contrast(1.05);
+        }
+        .hero-seal {
+            position: absolute;
+            bottom: -15px;
+            right: -20px;
+            background: var(--gold);
+            color: #0D060A;
+            font-family: 'Cinzel', serif;
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 12px 20px;
+            border-radius: 8px;
+            letter-spacing: 0.15em;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 3;
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+        .hero-pre {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--gold-pale);
+            margin-bottom: 14px;
+            opacity: 0;
+            animation: slideLeft 0.8s 0.2s forwards;
+        }
+        .hero-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.6rem, 5.5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            color: var(--ivory);
+            opacity: 0;
+            animation: slideLeft 0.8s 0.4s forwards;
+        }
+        .hero-title .highlight {
+            color: var(--gold-bright);
+            text-shadow: 0 0 20px rgba(201,164,75,0.5);
+        }
+        .hero-sub {
+            font-family: 'Lora', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+            color: rgba(237, 232, 223, 0.8);
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: slideLeft 0.8s 0.6s forwards;
+        }
+        .hero-desc {
+            font-size: 0.95rem;
+            color: rgba(237, 232, 223, 0.7);
+            max-width: 500px;
+            margin-bottom: 32px;
+            line-height: 1.8;
+            opacity: 0;
+            animation: slideLeft 0.8s 0.8s forwards;
+        }
+        .hero-actions {
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: slideLeft 0.8s 1s forwards;
+        }
+        .btn-gold {
+            background: var(--gold);
+            color: #0D060A;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.35s;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-gold:hover {
+            background: var(--gold-bright);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(201,164,75,0.4);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-light);
+            border: 2px solid var(--gold);
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.35s;
+        }
+        .btn-outline:hover {
+            background: rgba(201,164,75,0.08);
+            border-color: var(--gold-bright);
+            color: var(--gold-bright);
+            transform: translateY(-3px);
+        }
+
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            text-align: center;
+            animation: bounceDown 2s infinite;
+        }
+        .scroll-indicator span {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: var(--gold-pale);
+            display: block;
+            margin-bottom: 6px;
+        }
+        .scroll-line {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+        @keyframes bounceDown {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(16px); }
+        }
+
+        /* ========== SECTIONS COMMUNES ========== */
+        .section {
+            padding: 90px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        .section-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            font-weight: 700;
+            text-align: center;
+            color: var(--ivory);
+            margin-bottom: 16px;
+        }
+        .section-rule {
+            width: 80px;
+            height: 3px;
+            background: var(--gold);
+            margin: 0 auto 55px;
+            border-radius: 2px;
+        }
+
+        /* ========== BIO ========== */
+        #biographie {
+            background: #130A0D;
+        }
+        .bio-grid {
+            display: flex;
+            gap: 60px;
+            max-width: 1150px;
+            margin: 0 auto;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .bio-image-wrap {
+            flex: 0 0 320px;
+            position: relative;
+        }
+        .bio-image {
+            width: 100%;
+            aspect-ratio: 3/4;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 3px solid var(--gold);
+            box-shadow: var(--shadow-royal);
+        }
+        .bio-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+        .bio-image:hover img { transform: scale(1.05); }
+        .bio-text {
+            flex: 1;
+            min-width: 280px;
+        }
+        .bio-text h3 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--gold-bright);
+            margin-bottom: 18px;
+        }
+        .bio-text p {
+            font-size: 0.95rem;
+            color: #C0B5AA;
+            margin-bottom: 14px;
+            line-height: 1.8;
+        }
+        .bio-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .stat-box {
+            background: rgba(201,164,75,0.05);
+            border: 1px solid rgba(201,164,75,0.3);
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-num {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #A89B8C;
+        }
+
+        /* ========== PATRIMOINE ========== */
+        #patrimoine {
+            background: #0D060A;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(201,164,75,0.2);
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            transition: all 0.4s var(--transition-regal);
+        }
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--gold);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 30px rgba(201,164,75,0.15);
+            background: rgba(201,164,75,0.03);
+        }
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 18px;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(201,164,75,0.4));
+        }
+        .card h4 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+        .card p {
+            font-size: 0.85rem;
+            color: #A89B8C;
+            line-height: 1.7;
+        }
+
+        /* ========== GALERIE ========== */
+        #galerie {
+            background: #130A0D;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            border: 2px solid transparent;
+            transition: all 0.4s;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .gallery-item:hover {
+            border-color: var(--gold);
+            transform: scale(1.03);
+            box-shadow: var(--shadow-royal);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(13,6,10,0.9), transparent);
+            padding: 20px;
+            color: var(--gold-pale);
+            font-weight: 500;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .gallery-item:hover .gallery-caption { opacity: 1; }
+
+        /* ========== CONTACT ========== */
+        #contact {
+            background: #0A0408;
+            text-align: center;
+        }
+        .contact-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(201,164,75,0.35);
+            padding: 14px 28px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.35s;
+        }
+        .contact-link:hover {
+            background: rgba(201,164,75,0.1);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-royal);
+        }
+        .contact-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0D060A;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .email-royal {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--gold-bright);
+            text-decoration: none;
+            transition: color 0.3s;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .email-royal:hover { color: var(--white); }
+
+        footer {
+            background: #050108;
+            text-align: center;
+            padding: 25px;
+            color: rgba(237,232,223,0.35);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            border-top: 1px solid rgba(201,164,75,0.15);
+        }
+        footer span { color: var(--gold); }
+
+        /* ========== REVEAL ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.8s ease, transform 0.8s var(--transition-regal);
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-1 { transition-delay: 0.15s; }
+        .delay-2 { transition-delay: 0.3s; }
+        .delay-3 { transition-delay: 0.45s; }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 40px;
+                padding: 140px 20px 70px;
+            }
+            .hero-portrait-frame {
+                width: 270px;
+                height: 350px;
+            }
+            .hero-actions { justify-content: center; }
+            .bio-grid {
+                flex-direction: column;
+                text-align: center;
+            }
+            .bio-image-wrap { max-width: 280px; margin: 0 auto; }
+            .bio-stats { justify-content: center; }
+            .section { padding: 70px 20px; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 14px 25px; }
+            nav.scrolled { padding: 10px 25px; }
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 75%;
+                max-width: 320px;
+                height: 100vh;
+                background: rgba(10,4,8,0.98);
+                backdrop-filter: blur(30px);
+                flex-direction: column;
+                justify-content: center;
+                gap: 2.8rem;
+                transition: right 0.5s;
+                z-index: 1050;
+                box-shadow: -10px 0 40px rgba(0,0,0,0.7);
+                border-left: 1px solid rgba(201,164,75,0.2);
+            }
+            .nav-links.active { right: 0; }
+            .hamburger { display: flex; }
+            .hero-portrait-frame { width: 220px; height: 290px; }
+            .hero-title { font-size: 2rem; }
+            .cards-grid { grid-template-columns: 1fr; max-width: 400px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+            .hero-sub { font-size: 1rem; }
+            .btn-gold, .btn-outline { padding: 12px 24px; font-size: 0.7rem; }
+            .hero-portrait-frame { width: 190px; height: 250px; }
+            .hero-seal { font-size: 0.65rem; padding: 8px 14px; right: -10px; }
+            .contact-link { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADER -->
+    <div id="loader">
+        <div class="loader-emblem">
+            <div class="loader-ring"></div>
+            <div class="loader-ring-inner"></div>
+            <div class="loader-crown">👑</div>
+        </div>
+        <div class="loader-title">Sa Majesté Houétchénou</div>
+        <div class="loader-sub">Trône · Divinités · Mémoire</div>
+        <div class="loader-dots"><span></span><span></span><span></span></div>
+    </div>
+
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <a href="#hero" class="nav-logo">HM Houétchénou</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#biographie" onclick="closeMenu()">Souverain</a></li>
+            <li><a href="#patrimoine" onclick="closeMenu()">Héritage</a></li>
+            <li><a href="#galerie" onclick="closeMenu()">Galerie</a></li>
+            <li><a href="#contact" class="nav-cta" onclick="closeMenu()">Contact</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-pattern"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-glow bottom"></div>
+        <div class="hero-container">
+            <div class="hero-portrait-frame reveal">
+                <img src="sa.jpeg" alt="Sa Majesté Houétchénou" loading="eager">
+                <div class="hero-seal">👑 Roi</div>
+            </div>
+            <div class="hero-text">
+                <p class="hero-pre">Royaume d'Abomey · Bénin</p>
+                <h1 class="hero-title">Sa Majesté <span class="highlight">Houétchénou</span></h1>
+                <p class="hero-sub">Dépositaire sacré des traditions ancestrales et des divinités</p>
+                <p class="hero-desc">
+                    Gardien de la mémoire des rois, pont entre le monde visible et l'invisible,
+                    Sa Majesté incarne la continuité d'une lignée séculaire au service de son peuple
+                    et du patrimoine culturel béninois.
+                </p>
+                <div class="hero-actions">
+                    <a href="#biographie" class="btn-gold">Découvrir le souverain</a>
+                    <a href="#contact" class="btn-outline">Honorer un message</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator"><span>Dérouler</span><div class="scroll-line"></div></div>
+    </section>
+
+    <!-- BIOGRAPHIE -->
+    <section id="biographie" class="section">
+        <p class="section-label reveal">Le Gardien du Trône</p>
+        <h2 class="section-title reveal">Biographie Royale</h2>
+        <div class="section-rule reveal"></div>
+        <div class="bio-grid">
+            <div class="bio-image-wrap reveal delay-1">
+                <div class="bio-image"><img src="sa.jpeg" alt="Portrait royal" loading="lazy"></div>
+            </div>
+            <div class="bio-text reveal delay-2">
+                <h3>Un règne ancré dans l'éternité</h3>
+                <p>
+                    <strong>Sa Majesté Houétchénou</strong> est l'incarnation vivante d'une dynastie
+                    qui plonge ses racines dans la grandeur du royaume du Danhomè. Intronisé selon
+                    les rites immémoriaux, il porte la lourde charge de préserver l'âme d'un peuple
+                    à travers ses traditions, sa langue et ses divinités.
+                </p>
+                <p>
+                    Plus qu'un roi, il est le réceptacle des forces sacrées, l'intermédiaire entre
+                    les ancêtres, les divinités vaudou et la communauté. Sa parole est écoutée,
+                    sa sagesse respectée, son autorité morale incontestée dans tout le pays.
+                </p>
+                <p>
+                    Ambassadeur culturel, il œuvre sans relâche pour la reconnaissance internationale
+                    du patrimoine béninois, collaborant avec l'UNESCO et les institutions pour
+                    la sauvegarde des palais royaux d'Abomey et des sites sacrés.
+                </p>
+                <div class="bio-stats">
+                    <div class="stat-box"><span class="stat-num">300+</span><span class="stat-label">Ans d'héritage</span></div>
+                    <div class="stat-box"><span class="stat-num">41</span><span class="stat-label">Divinités honorées</span></div>
+                    <div class="stat-box"><span class="stat-num">UNESCO</span><span class="stat-label">Patrimoine Mondial</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PATRIMOINE & DIVINITÉS -->
+    <section id="patrimoine" class="section">
+        <p class="section-label reveal">Mission sacrée</p>
+        <h2 class="section-title reveal">Patrimoine & Divinités</h2>
+        <div class="section-rule reveal"></div>
+        <div class="cards-grid">
+            <div class="card reveal">
+                <span class="card-icon">🏛️</span>
+                <h4>Palais Royaux</h4>
+                <p>Conservation des palais d'Abomey, classés au patrimoine mondial, et transmission de leur histoire.</p>
+            </div>
+            <div class="card reveal delay-1">
+                <span class="card-icon">🌿</span>
+                <h4>Rituels Vaudou</h4>
+                <p>Préservation des cérémonies sacrées, initiation des prêtres et maintien de l'équilibre cosmique.</p>
+            </div>
+            <div class="card reveal delay-2">
+                <span class="card-icon">📜</span>
+                <h4>Mémoire Orale</h4>
+                <p>Collecte et transmission des récits fondateurs, chants et généalogies royales.</p>
+            </div>
+            <div class="card reveal delay-3">
+                <span class="card-icon">🤲</span>
+                <h4>Justice coutumière</h4>
+                <p>Médiation des conflits selon les lois ancestrales, restauration de l'harmonie sociale.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERIE -->
+    <section id="galerie" class="section">
+        <p class="section-label reveal">Instants solennels</p>
+        <h2 class="section-title reveal">Galerie Royale</h2>
+        <div class="section-rule reveal"></div>
+        <div class="gallery-grid">
+            <div class="gallery-item reveal">
+                <img src="sa.jpeg" alt="Sa Majesté en tenue d'apparat" loading="lazy">
+                <div class="gallery-caption">Apparat royal</div>
+            </div>
+            <div class="gallery-item reveal delay-1">
+                <img src="sa.jpeg" alt="Cérémonie vaudou" loading="lazy">
+                <div class="gallery-caption">Cérémonie sacrée</div>
+            </div>
+            <div class="gallery-item reveal delay-2">
+                <img src="sa.jpeg" alt="Conseil des sages" loading="lazy">
+                <div class="gallery-caption">Conseil des sages</div>
+            </div>
+            <div class="gallery-item reveal delay-3">
+                <img src="sa.jpeg" alt="Rencontre UNESCO" loading="lazy">
+                <div class="gallery-caption">Patrimoine mondial</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+        <p class="section-label reveal">Entrer en relation</p>
+        <h2 class="section-title reveal">Contact & Réseaux</h2>
+        <div class="section-rule reveal"></div>
+        <div class="contact-links reveal delay-1">
+            <a href="https://www.facebook.com/profile.php?id=100080462854812" target="_blank" rel="noopener" class="contact-link">
+                <span class="contact-icon">f</span> Page Facebook Royale
+            </a>
+        </div>
+        <a href="mailto:majeste@houetchenou.bj" class="email-royal reveal delay-2">majeste@houetchenou.bj</a>
+    </section>
+
+    <footer>
+        <p>© <span>Sa Majesté Houétchénou</span> — Tous droits réservés. Royaume du Danhomè, Bénin.</p>
+    </footer>
+
+    <script>
+        (function() {
+            const loader = document.getElementById('loader');
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 2200);
+            });
+            if (document.readyState === 'complete') {
+                setTimeout(() => {
+                    loader.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 2000);
+            }
+            document.body.style.overflow = 'hidden';
+
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                navbar.classList.toggle('scrolled', window.scrollY > 40);
+            });
+
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+            const overlay = document.getElementById('menuOverlay');
+            const openMenu = () => {
+                navLinks.classList.add('active');
+                hamburger.classList.add('active');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            };
+            const closeMenu = () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            };
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.contains('active') ? closeMenu() : openMenu();
+            });
+            overlay.addEventListener('click', closeMenu);
+            window.closeMenu = closeMenu;
+
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+            reveals.forEach(el => observer.observe(el));
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    if (href === '#') return;
+                    const target = document.querySelector(href);
+                    if (target) {
+                        e.preventDefault();
+                        const offset = navbar.offsetHeight + 20;
+                        window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - offset, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            const glows = document.querySelectorAll('.hero-glow');
+            window.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                glows.forEach((g, i) => {
+                    const factor = i === 0 ? 1 : -1;
+                    g.style.transform = `translate(${(x-0.5)*30*factor}px, ${(y-0.5)*30*factor}px)`;
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
